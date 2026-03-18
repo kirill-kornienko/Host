@@ -1,87 +1,63 @@
-# Домашнее задание к занятию «Уязвимости и атаки на информационные системы» - `Корниенко Кирилл`
+# Домашнее задание к занятию «Защита хоста» - `Корниенко Кирилл`
 
 
 ### Задание 1. 
 
-Скачайте и установите виртуальную машину Metasploitable: [https://sourceforge.net/projects/metasploitable/](https://sourceforge.net/projects/metasploitable/)
+1. Установите eCryptfs.
+2. Добавьте пользователя cryptouser.
+3. Зашифруйте домашний каталог пользователя с помощью eCryptfs.
 
-Это типовая ОС для экспериментов в области информационной безопасности, с которой следует начать при анализе уязвимостей.
-
-Просканируйте эту виртуальную машину, используя nmap.
-
-Сами уязвимости можно поискать на сайте [https://www.exploit-db.com/](https://www.exploit-db.com/)
-
-Для этого нужно в поиске ввести название сетевой службы, обнаруженной на атакуемой машине, и выбрать подходящие по версии уязвимости.
-
-Ответьте на следующие вопросы:
-
-- Какие сетевые службы в ней разрешены?
-
-- Какие уязвимости были вами обнаружены? (список со ссылками: достаточно трёх уязвимостей)
-
-*Приведите ответ в свободной форме.*
+*В качестве ответа пришлите снимки экрана домашнего каталога пользователя с исходными и зашифрованными данными.*
 
 ### Ответ:
 
-- Какие сетевые службы в ней разрешены?
+1. Добавьте пользователя cryptouser.
 
-![nmap](https://github.com/kirill-kornienko/Backup/blob/main/nmap.png)
+![adduser](https://github.com/kirill-kornienko/Host/blob/main/sudo%20adduser%20cryptouser.png)
 
-- Какие уязвимости были вами обнаружены? (список со ссылками: достаточно трёх уязвимостей)
+3. Зашифруйте домашний каталог пользователя с помощью eCryptfs.
 
-1. vsftpd 2.3.4 - [Backdoor Command Execution (Metasploit)](https://www.exploit-db.com/exploits/17491)
+![ecryptfs](https://github.com/kirill-kornienko/Host/blob/main/sudo%20ecryptfs.png)
 
-2. Samba 3.0.20  - ['Username' map script' Command Execution (Metasploit)](https://www.exploit-db.com/exploits/16320)
+![sudo_ecryptfs](https://github.com/kirill-kornienko/Host/blob/main/sudo%20ecryptfs.png)
 
-3. UnrealIRCd 3.2.8.1 - [Backdoor Command Execution (Metasploit)](https://www.exploit-db.com/exploits/16922)
+![toush](https://github.com/kirill-kornienko/Host/blob/main/touch.png)
+
+![private](https://github.com/kirill-kornienko/Host/blob/main/private.png)
+
+
 
 ### Задание 2
 
-Проведите сканирование Metasploitable в режимах SYN, FIN, Xmas, UDP.
+1. Установите поддержку LUKS.
 
-Запишите сеансы сканирования в Wireshark.
+2. Создайте небольшой раздел, например, 100 Мб.
 
-Ответьте на следующие вопросы:
+3. Зашифруйте созданный раздел с помощью LUKS.
 
-- Чем отличаются эти режимы сканирования с точки зрения сетевого трафика?
 
-- Как отвечает сервер?
-
-*Приведите ответ в свободной форме.*
+*В качестве ответа пришлите снимки экрана с поэтапным выполнением задания.*
 
 ### Ответ:
 
-#### Режим SYN
+1. Установите поддержку LUKS.
 
-Отправляется пакет с флагом SYN для установки соединения. Ответ SYN/ACK - порт открыт (После происходит сброс соединения RST). Ответ RST/ACK - порт закрыт. 
+![luks](https://github.com/kirill-kornienko/Host/blob/main/luks.png)
 
-![nmap_sS](https://github.com/kirill-kornienko/Security/blob/main/nmap_sS.png)
+2. Создайте небольшой раздел, например, 100 Мб.
 
-![wireahark_sS](https://github.com/kirill-kornienko/Security/blob/main/wireshark_syn.png)
+![lsblk](https://github.com/kirill-kornienko/Host/blob/main/lsblk.png)
 
-#### Режим FIN
+3. Зашифруйте созданный раздел с помощью LUKS.
 
-Отправляется пакет с флагом FIN. Ответ RST/ACK - порт закрыт. Если ответа нет - порт открыт|фильтруется.
+![mkfs](https://github.com/kirill-kornienko/Host/blob/main/mkfs.png)
 
-![nmap_sF](https://github.com/kirill-kornienko/Security/blob/main/nmap_sF.png)
+![secret](https://github.com/kirill-kornienko/Host/blob/main/secret.png)
 
-![wireshark_sF](https://github.com/kirill-kornienko/Security/blob/main/wireshark_fin.png)
+![bad](https://github.com/kirill-kornienko/Host/blob/main/bad%20option.png)
 
-#### Режим Xmas
+![test](https://github.com/kirill-kornienko/Host/blob/main/test_txt.png)
 
-Отправляется пакет с флагами FIN/PSH/URG. Ответ RST/ACK - порт закрыт. Если ответа нет - порт открыт|фильтруется.
-
-![nmap_sX](https://github.com/kirill-kornienko/Security/blob/main/nmap_sX.png)
-
-![wireshark_sX](https://github.com/kirill-kornienko/Security/blob/main/wireshark_xmas.png)
-
-#### Режим UDP
-
-Отправляет пустой UDP заголовок на каждый порт. Ответ ICMP ошибка о недостижимости порта (тип 3, код 3) - порт закрыт. Другие ICMP ошибки недостижимости - порт фильтруется. После нескольких попыток без ответа - порт открыт|фильтруется. Ответ UDP - порт открыт.
-
-![nmap_udp](https://github.com/kirill-kornienko/Security/blob/main/nmap_udp.png)
-
-![wireshark_udp](https://github.com/kirill-kornienko/Security/blob/main/wireshark_udp.png)
 
 
 
